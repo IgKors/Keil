@@ -22,8 +22,5 @@ GND	- GND
 _________________________________________________________
 BUTTONS (SWITCH on GND)
 ---------------------------------------------------------
-PE11 BUTTON-1 Left, 
-PE12 BUTTON-2 Ok, 
-PE13 BUTTON-3 Right, 
-PE14 BUTTON-4 UP, 
-PE15 BUTTON-5 Down, 
+PE11 BUTTON-1 Left | PE12 BUTTON-2 Ok | PE13 BUTTON-3 Right | 
+PE14 BUTTON-4 UP   | PE15 BUTTON-5 Down
