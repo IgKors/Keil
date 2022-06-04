@@ -1,3 +1,5 @@
+VEB_NL_9.09.02.pdf - Sample project in Altium Designer
+---------------------------------------------------------
 Keil / STM32F407_CHx4
 Four-channel meander generator.
 1. Setting the phase shift between channels with hard synchronization.
