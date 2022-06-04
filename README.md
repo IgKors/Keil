@@ -11,9 +11,8 @@ Slave TIM5 PA0 - N 1 Channel, TIM2 PA2 - N 2 Channel,
 
 Display TFT ILI9341
 ---------------------------------------------------------
-MOSI   /MISO/  SCK
-PB5    /PB4/   PB3
-		
+PB5-MOSI / PB4-MISO / PB3-SCK
+  		
 PB7 	- CS
 PB6 	- WRX PIN for DC (data/command)
 PB8 	- RESET
