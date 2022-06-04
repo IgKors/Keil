@@ -18,7 +18,7 @@ PB5-MOSI / PB4-MISO / PB3-SCK
 PB7 	- CS
 PB6 	- WRX PIN for DC (data/command)
 PB8 	- RESET
-+3.3V	- LED, Vcc
++3.3V	- LED, Vcc-+5V
 GND	- GND
 _________________________________________________________
 BUTTONS (SWITCH on GND)
