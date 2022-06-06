@@ -105,10 +105,44 @@ TIM 14  |PA7    PF9    -      |-      -      -      |-      -      -      |-    
 #define MPHAS2				7 // Phase 2 / CH3-PA7					/ PHASE2
 #define MPHAS3				8 // Phase 3 / CH3-PB9					/ PHASE3
 
-int16_t STEP  = 10; 			// Adjustment step Freq
-int16_t STEPd = 10; 			// Adjustment step DUTE
-int16_t STEPf = 10; 			// Adjustment step Phase
-int8_t MENU   = MFREQ; 		// Menu item number
+
+// 
+#define ADDRESS 			0x0800C000
+#define SECTOR 				FLASH_Sector_3
+
+int32_t aFREQ			= ADDRESS; 
+int32_t aDUT1			= ADDRESS+2; 		
+int32_t	aDUT2			= ADDRESS+4; 
+int32_t	aDUT3			= ADDRESS+6; 
+int32_t	aDUT4			= ADDRESS+8; 
+int32_t aPHAS1		= ADDRESS+10;
+int32_t aPHAS2		= ADDRESS+12;
+int32_t aPHAS3		= ADDRESS+14;
+int32_t aSTEP			= ADDRESS+16;
+int32_t aSTEPd		= ADDRESS+18;
+int32_t aSTEPf		= ADDRESS+20;
+int32_t aFlagFL		= ADDRESS+22;
+
+/*
+1) 250kHz C x 4 (20nF) 0, 45, 90 , 135 grd
+2) 360kHz C x 4 (10nF) 0, 90, 180, 270 grd
+*/
+  float 	FREQ		= 362000; //362 kHz for capacitors x 4 (20nF)
+	int16_t PHAS1		=	900,		// Channel-2 90 degree phase shift
+					PHAS2		=	1800,  	// Channel-3 180 degree phase shift
+					PHAS3		=	2700,		// Channel-4 270 degree phase shift
+					
+					DUT1 		= 500, 		// Channel 1 duty cycle 50 %
+					DUT2 		= 500,		// Channel 2 duty cycle 50 %
+					DUT3 		= 500,		// Channel 3 duty cycle 50 %
+					DUT4 		= 500,		// Channel 4 duty cycle 50 %
+					
+					STEP  	= 10,			// Adjustment step Freq
+					STEPd 	= 10,			// Adjustment step DUTE
+					STEPf 	= 10,			// Adjustment step Phase
+					MENU  	= MFREQ;	// Menu item number
+
+	int8_t 	BUTT1=0, BUTT2=0,	BUTT3=0, BUTT4=0, BUTT5=0;
 
 // Display Orientation
 enum TM_ILI9341_Orientation_Landscape_1;
@@ -121,59 +155,7 @@ enum TM_ILI9341_Orientation_Landscape_1;
 		TM_PWM_TIM_t TIM3_Data;
 		TM_PWM_TIM_t TIM4_Data;
 		TM_PWM_TIM_t TIM5_Data;
-
-/*
-Structure for writing to flash settings. 
-While saving settings is not implemented!
-*/
-typedef struct {
-	float 	FREQ;  
-	int16_t DUT1; 		
-	int16_t	DUT2; 
-	int16_t	DUT3; 
-	int16_t	DUT4; 
-	int16_t PHAS1;
-	int16_t PHAS2;//
-	int16_t PHAS3;//
-	int16_t STEP;
-	int16_t STEPd;
-	int16_t STEPf;
-	int8_t ZeroFlag;
-} DataChannals_t;
-
-	
-	int32_t DUTY1 	= 0, 		
-					DUTY2 	= 0,
-					DUTY3 	= 0,
-					DUTY4 	= 0;
-	
-	int16_t DUT1 		= 500, 		// Channel 1 duty cycle 50 %
-					DUT2 		= 500,		// Channel 2 duty cycle 50 %
-					DUT3 		= 500,		// Channel 3 duty cycle 50 %
-					DUT4 		= 500;		// Channel 4 duty cycle 50 %
-	
-	int32_t POPRAVKA= 68,
-					PHASE1	=	0,	
-					PHASE2	=	0, 
-					PHASE3	=	0;
-
-/*
-1) 250kHz C x 4 (20nF) 0, 45, 90 , 135 grd
-2) 360kHz C x 4 (10nF) 0, 90, 180, 270 grd
-*/
-
-  float 	DUTx		= 0,
-					PHASEs	= 0, 
-	
-					FREQ		= 362000; //362 kHz for capacitors x 4 (20nF)
-
-	int16_t PHAS1		=	900,		// Channel-2 90 degree phase shift
-					PHAS2		=	1800,  	// Channel-3 180 degree phase shift
-					PHAS3		=	2700;		// Channel-4 270 degree phase shift
-					
-									
-	int8_t 	BUTT1=0, 		BUTT2=0, 		BUTT3=0, BUTT4=0, BUTT5=0;
-
+										
 void StartPage (void);
 void FreqSendDisplay (int x, int y, float freq);
 void SetCH1(void);
@@ -185,22 +167,49 @@ void WriteFlash(void);
 
 void WriteFlash(void)
 {	
-DataChannals_t ALL_CHANAL;
- FLASH_Unlock();
-	
-	ALL_CHANAL.FREQ		= FREQ;
-	ALL_CHANAL.DUT1		= DUT1;
-	ALL_CHANAL.DUT2		= DUT2;
-	ALL_CHANAL.DUT3		= DUT3;
-	ALL_CHANAL.DUT4		= DUT4;
-	ALL_CHANAL.PHAS1	= PHAS1;
-	ALL_CHANAL.PHAS2	= PHAS2;
-	ALL_CHANAL.PHAS3	= PHAS3;
-	ALL_CHANAL.STEP		= STEP;
-	ALL_CHANAL.STEPd	=	STEPd;
-	ALL_CHANAL.STEPf	= STEPf;
- FLASH_Lock();
+	// Write 16 Bits Data in Flash
+	FLASH_Unlock();
+	if (FLASH_EraseSector(FLASH_Sector_3, OB_BOR_LEVEL3))
+	{
+		FLASH_ProgramHalfWord (aFREQ, 	FREQ);
+		FLASH_ProgramHalfWord (aDUT1, 	DUT1);
+		FLASH_ProgramHalfWord (aDUT2, 	DUT2);
+		FLASH_ProgramHalfWord (aDUT3, 	DUT3);
+		FLASH_ProgramHalfWord (aDUT4, 	DUT4);
+		FLASH_ProgramHalfWord (aPHAS1, 	PHAS1);
+		FLASH_ProgramHalfWord (aPHAS2, 	PHAS2);
+		FLASH_ProgramHalfWord (aPHAS3, 	PHAS3);
+		FLASH_ProgramHalfWord (aSTEP, 	STEP);
+		FLASH_ProgramHalfWord (aSTEPd, 	STEPd);
+		FLASH_ProgramHalfWord (aSTEPf, 	STEPf);
+		FLASH_ProgramHalfWord (aFlagFL, 0);
+	}
+	FLASH_Lock();
 }
+
+// Read data from memory 16 Bit data 
+uint16_t read_16bit (uint32_t FLASH_ADDR)
+{
+	uint16_t FlashData;
+	FlashData = *(__IO uint16_t*)FLASH_ADDR;
+	return FlashData;
+}
+
+void ReadFlash(void)
+{	
+		FREQ  = read_16bit (aFREQ);
+		DUT1  = read_16bit (aDUT1);
+		DUT2  = read_16bit (aDUT2);
+		DUT3  = read_16bit (aDUT3);
+		DUT4  = read_16bit (aDUT4);
+		PHAS1 = read_16bit (aPHAS1);
+		PHAS2 = read_16bit (aPHAS2);
+		PHAS3 = read_16bit (aPHAS3);
+		STEP  = read_16bit (aSTEP);
+		STEPd = read_16bit (aSTEPd);
+		STEPf = read_16bit (aSTEPf);
+}
+
 
 // TIM1(MASTER CH1 PP1 PA8)
 // TIM5(SLAVE0 CH1 PP1 PA0)	
@@ -209,7 +218,9 @@ DataChannals_t ALL_CHANAL;
 // TIM4(SLAVE3 CH4 PP1 PB9)
 
 void TIMERS_Init(void) {
-	
+int32_t DUTY1,  DUTY2,  DUTY3, DUTY4;
+int32_t PHASE1, PHASE2, PHASE3;	
+float 	DUTx, PHASEs;	
 		// TIM1(MASTER CH1 PP1 PA8)
 		TM_PWM_InitTimer	(TIM1, &TIM1_Data, FREQ);
 
@@ -301,6 +312,9 @@ void TIMERS_Init(void) {
 }
 
 void SetCH_ALL(void) {
+int32_t DUTY1,  DUTY2,  DUTY3, DUTY4;
+int32_t PHASE1, PHASE2, PHASE3;	
+float 	DUTx, PHASEs;
 	
 		TM_PWM_InitTimer	(TIM1, &TIM1_Data, FREQ);
 		TM_PWM_InitTimer	(TIM5, &TIM5_Data, FREQ);
@@ -453,6 +467,9 @@ int main(void) {
 	/* Fill LCD with blue color */
 	TM_ILI9341_Fill(FonScreen);
 	
+	// If the first inclusion to write parameters in Flash. Otherwise read parameters from Flash into variables.
+	if (read_16bit(aFlagFL)) WriteFlash(); else ReadFlash();
+	
 	TIMERS_Init();
 	SetCH_ALL();
 	
@@ -471,8 +488,14 @@ int main(void) {
 		
 		if (ReadBUTT4==0){
 			Delayms(250);
-			if (MENU > 0) MENU--; if (MENU == 0) MENU=8;
+			//if (MENU > 0) MENU--; if (MENU == 0) MENU=8;
+			WriteFlash(); // Current Settings Saved. Write data to Flash.
 			StartPage();
+			TM_ILI9341_Puts(40, 207, "Current Settings Saved!", 
+			&TM_Font_11x18, ILI9341_COLOR_WHITE, FonScreen); // ILI9341_COLOR_YELLOW
+			Delayms(1000);			
+			TM_ILI9341_Puts(40, 207, "1-PA0 2-PA2 3-PA7 4-PB9", 
+			&TM_Font_11x18, ILI9341_COLOR_WHITE, FonScreen); // ILI9341_COLOR_YELLOW	
 		}
 		
 		if (ReadBUTT5==0){
