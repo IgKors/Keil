@@ -10,49 +10,49 @@ If it is necessary to use 8 channels with a phase shift of 45 degrees
 =======================================================================================================
  
  ****************************************************************************************
- *	@author			Igor Korsunskiy																													*
- *	@email			igkors@ukr.net																													*
- *	@ide				Keil uVision 5																													*
- *	@packs			STM32F4xx Keil packs version Keil.STM32F4xx_DFP.2.11.0									*
- *	@stdperiph	STM32F4xx Standard peripheral drivers version 1.4.0 or greater required *
- *  @lib				TM - author: Tilen Majerle                                              *
+ * @author	Igor Korsunskiy								*																					*
+ * @email	igkors@ukr.net								*																					*
+ * @ide		Keil uVision 5								*																							*
+ * @packs	STM32F4xx Keil packs version Keil.STM32F4xx_DFP.2.11.0			*
+ * @stdperiph	STM32F4xx Standard peripheral drivers version 1.4.0 or greater required *
+ * @lib		TM - author: Tilen Majerle                              		*
  ****************************************************************************************
  ****************************************************************************************
  *	DDS 4хCHANAL на STM32F407VET6	V-02.01	2022.06.03																		*
  *	TFT ILI9341 display without touchscreen																							*
  ****************************************************************************************
  *********************************************************
-		peripheral pins for STM32F407VET6
-		_________________________________________________________
-		Display TFT ILI9341
-		---------------------------------------------------------
-		PINS PACK 1 (SPI3)
+peripheral pins for STM32F407VET6
+_________________________________________________________
+Display TFT ILI9341
+---------------------------------------------------------
+PINS PACK 1 (SPI3)
 		
-		MOSI   /MISO/  SCK
-		PB5    /PB4/   PB3
+MOSI   /MISO/  SCK
+PB5    /PB4/   PB3
 		
-		PB7 	- CS
-		PB6 	- WRX PIN for DC (data/command)
-		PB8 	- RESET
-		+3.3V	- LED, Vcc
-		GND		- GND
-		_________________________________________________________
-		BUTTONS
-		---------------------------------------------------------
-		PE11 - BUTTON1 	(SWITCH on GND) Left
-		PE12 - BUTTON4	(SWITCH on GND) Ok
-		PE13 - BUTTON2	(SWITCH on GND) Right
-		PE14 - BUTTON4	(SWITCH on GND) UP
-		PE15 - BUTTON5	(SWITCH on GND) Down
-		__________________________________________________________
+PB7 	- CS
+PB6 	- WRX PIN for DC (data/command)
+PB8 	- RESET
++3.3V	- LED, Vcc
+GND	- GND
+_________________________________________________________
+BUTTONS
+---------------------------------------------------------
+PE11 - BUTTON1 	(SWITCH on GND) Left
+PE12 - BUTTON4	(SWITCH on GND) Ok
+PE13 - BUTTON2	(SWITCH on GND) Right
+PE14 - BUTTON4	(SWITCH on GND) UP
+PE15 - BUTTON5	(SWITCH on GND) Down
+__________________________________________________________
 		
-		In channels No. 2, 3, 4, the phase shift relative to channel No. 1 is adjusted
-		----------------------------------------------------------
-		TIM1(MASTER CH1 PP1 PA8) Sinchro Timer for four Slave channels
-		TIM5(SLAVE0 CH1 PP1 PA0) N 1 Channel - Phase shift 0 degrees
-		TIM2(SLAVE1 CH3 PP1 PA2) N 2 Channel - Phase shift 0... 360 degrees
-		TIM3(SLAVE2 CH2 PP1 PA7) N 3 Channel - Phase shift 0... 360 degrees
-		TIM4(SLAVE3 CH4 PP1 PB9) N 4 Channel - Phase shift 0... 360 degrees
+In channels No. 2, 3, 4, the phase shift relative to channel No. 1 is adjusted
+----------------------------------------------------------
+TIM1(MASTER CH1 PP1 PA8) Sinchro Timer for four Slave channels
+TIM5(SLAVE0 CH1 PP1 PA0) N 1 Channel - Phase shift 0 degrees
+TIM2(SLAVE1 CH3 PP1 PA2) N 2 Channel - Phase shift 0... 360 degrees
+TIM3(SLAVE2 CH2 PP1 PA7) N 3 Channel - Phase shift 0... 360 degrees
+TIM4(SLAVE3 CH4 PP1 PB9) N 4 Channel - Phase shift 0... 360 degrees
 
 TIMER   |CHANNEL 1            |CHANNEL 2            |CHANNEL 3            |CHANNEL 4
         |PP1    PP2    PP3    |PP1    PP2    PP3    |PP1    PP2    PP3    |PP1    PP2    PP3
@@ -95,66 +95,65 @@ TIM 14  |PA7    PF9    -      |-      -      -      |-      -      -      |-    
 #define	ReadBUTT5 GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_15)	// Down
 
 // ++++ menu items   +++++++++++++++++++++++++++++++++++++++++++++++
-#define MFREQ					1 // Frequency of 4 channels		/ FREQ
-#define MDUTY1				2 // duty cycle CH1-PA0					/ DUTY1
-#define MDUTY2				3 // duty cycle CH3-PA2					/ DUTY2
-#define MDUTY3				4 // duty cycle CH2-PA7					/ DUTY3
-#define MDUTY4				5 // duty cycle CH4-PB9					/ DUTY4
+#define MFREQ	1 // Frequency of 4 channels	/ FREQ
+#define MDUTY1	2 // duty cycle CH1-PA0		/ DUTY1
+#define MDUTY2	3 // duty cycle CH3-PA2		/ DUTY2
+#define MDUTY3	4 // duty cycle CH2-PA7		/ DUTY3
+#define MDUTY4	5 // duty cycle CH4-PB9		/ DUTY4
 
-#define MPHAS1				6 // Phase 1 / CH2-PA2  				/ PHASE1
-#define MPHAS2				7 // Phase 2 / CH3-PA7					/ PHASE2
-#define MPHAS3				8 // Phase 3 / CH3-PB9					/ PHASE3
+#define MPHAS1	6 // Phase 1 / CH2-PA2  	/ PHASE1
+#define MPHAS2	7 // Phase 2 / CH3-PA7		/ PHASE2
+#define MPHAS3	8 // Phase 3 / CH3-PB9		/ PHASE3
 
 
-// 
-#define ADDRESS 			0x0800C000
-#define SECTOR 				FLASH_Sector_3
+#define ADDRESS	0x0800C000
+#define SECTOR 	FLASH_Sector_3
 
-int32_t aFREQ			= ADDRESS; 
-int32_t aDUT1			= ADDRESS+2; 		
-int32_t	aDUT2			= ADDRESS+4; 
-int32_t	aDUT3			= ADDRESS+6; 
-int32_t	aDUT4			= ADDRESS+8; 
-int32_t aPHAS1		= ADDRESS+10;
-int32_t aPHAS2		= ADDRESS+12;
-int32_t aPHAS3		= ADDRESS+14;
-int32_t aSTEP			= ADDRESS+16;
-int32_t aSTEPd		= ADDRESS+18;
-int32_t aSTEPf		= ADDRESS+20;
-int32_t aFlagFL		= ADDRESS+22;
+int32_t aFREQ	= ADDRESS; 
+int32_t aDUT1	= ADDRESS+2; 		
+int32_t	aDUT2	= ADDRESS+4; 
+int32_t	aDUT3	= ADDRESS+6; 
+int32_t	aDUT4	= ADDRESS+8; 
+int32_t aPHAS1	= ADDRESS+10;
+int32_t aPHAS2	= ADDRESS+12;
+int32_t aPHAS3	= ADDRESS+14;
+int32_t aSTEP	= ADDRESS+16;
+int32_t aSTEPd	= ADDRESS+18;
+int32_t aSTEPf	= ADDRESS+20;
+int32_t aFlagFL	= ADDRESS+22;
 
 /*
 1) 250kHz C x 4 (20nF) 0, 45, 90 , 135 grd
 2) 360kHz C x 4 (10nF) 0, 90, 180, 270 grd
 */
-  float 	FREQ		= 362000; //362 kHz for capacitors x 4 (20nF)
-	int16_t PHAS1		=	900,		// Channel-2 90 degree phase shift
-					PHAS2		=	1800,  	// Channel-3 180 degree phase shift
-					PHAS3		=	2700,		// Channel-4 270 degree phase shift
+ float 	FREQ	= 362000; //362 kHz for capacitors x 4 (20nF)
+int16_t PHAS1	= 900,	  // Channel-2 90 degree phase shift
+	PHAS2	= 1800,   // Channel-3 180 degree phase shift
+	PHAS3	= 2700,	  // Channel-4 270 degree phase shift
 					
-					DUT1 		= 500, 		// Channel 1 duty cycle 50 %
-					DUT2 		= 500,		// Channel 2 duty cycle 50 %
-					DUT3 		= 500,		// Channel 3 duty cycle 50 %
-					DUT4 		= 500,		// Channel 4 duty cycle 50 %
+	DUT1 	= 500, 	  // Channel 1 duty cycle 50 %
+	DUT2 	= 500,	  // Channel 2 duty cycle 50 %
+	DUT3 	= 500,	  // Channel 3 duty cycle 50 %
+	DUT4 	= 500,	  // Channel 4 duty cycle 50 %
 					
-					STEP  	= 10,			// Adjustment step Freq
-					STEPd 	= 10,			// Adjustment step DUTE
-					STEPf 	= 10,			// Adjustment step Phase
-					MENU  	= MFREQ;	// Menu item number
+	STEP  	= 10,	  // Adjustment step Freq
+	STEPd 	= 10,	  // Adjustment step DUTE
+	STEPf	= 10,	  // Adjustment step Phase
+	MENU  	= MFREQ;  // Menu item number
 
-	int8_t 	BUTT1=0, BUTT2=0,	BUTT3=0, BUTT4=0, BUTT5=0;
+int8_t 	BUTT1=0, BUTT2=0, BUTT3=0, BUTT4=0, BUTT5=0;
 
 // Display Orientation
 enum TM_ILI9341_Orientation_Landscape_1;
 
 //  Global variables for Timers
-		TIM_OCInitTypeDef TIM_OC;
+TIM_OCInitTypeDef TIM_OC;
 
-		TM_PWM_TIM_t TIM1_Data;
-		TM_PWM_TIM_t TIM2_Data;
-		TM_PWM_TIM_t TIM3_Data;
-		TM_PWM_TIM_t TIM4_Data;
-		TM_PWM_TIM_t TIM5_Data;
+TM_PWM_TIM_t TIM1_Data;
+TM_PWM_TIM_t TIM2_Data;
+TM_PWM_TIM_t TIM3_Data;
+TM_PWM_TIM_t TIM4_Data;
+TM_PWM_TIM_t TIM5_Data;
 										
 void StartPage (void);
 void FreqSendDisplay (int x, int y, float freq);
@@ -263,24 +262,24 @@ float 	DUTx, PHASEs;
 		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_9,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
 		
 		TIM_OCStructInit(&TIM_OC);
-		TIM_OC.TIM_OCMode 				= TIM_OCMode_PWM1; 				// TIM_OCMode_PWM1 / TIM_OCMode_Toggle
-    TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
-    TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High; 		// TIM_OCPolarity_Low / TIM_OCPolarity_High
+		TIM_OC.TIM_OCMode 		= TIM_OCMode_PWM1; 		// TIM_OCMode_PWM1 / TIM_OCMode_Toggle
+    		TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
+    		TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High; 		// TIM_OCPolarity_Low / TIM_OCPolarity_High
 		TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
-    TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High;
+    		TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High;
 		
-		TIM_OC.TIM_Pulse 					= TIM1_Data.Period/2;
+		TIM_OC.TIM_Pulse 		= TIM1_Data.Period/2;
 		TIM_OC1Init(TIM1, &TIM_OC);
     
 		
-		TIM_OC.TIM_Pulse 					= DUTY2;
+		TIM_OC.TIM_Pulse 		= DUTY2;
 		TIM_OC2Init(TIM2, &TIM_OC);
 		
-		TIM_OC.TIM_Pulse 					= DUTY3;
+		TIM_OC.TIM_Pulse 		= DUTY3;
 		TIM_OC3Init(TIM3, &TIM_OC);
 		
-		TIM_OC.TIM_Pulse 					= DUTY4;
-    TIM_OC4Init(TIM4, &TIM_OC);
+		TIM_OC.TIM_Pulse 		= DUTY4;
+    		TIM_OC4Init(TIM4, &TIM_OC);
 		
 		// Registr OUT TIM_TRGOSource 
 		//Configuring the master 
@@ -288,19 +287,19 @@ float 	DUTx, PHASEs;
 		TIM_SelectMasterSlaveMode	(TIM1, TIM_MasterSlaveMode_Enable);
 		
 		//Configuring the Slsve
-		TIM_SelectInputTrigger	 	(TIM3, TIM_TS_ITR0);										//CH2 - TIM_TS_ITR0 for master(TIM1)		
-    TIM_SelectSlaveMode				(TIM3, TIM_SlaveMode_Gated);
-		TIM_SelectInputTrigger	 	(TIM2, TIM_TS_ITR0);										//CH3 - TIM_TS_ITR0 for master(TIM1)		
-    TIM_SelectSlaveMode				(TIM2, TIM_SlaveMode_Gated);
-		TIM_SelectInputTrigger	 	(TIM4, TIM_TS_ITR0);										//CH4 - TIM_TS_ITR0 for master(TIM1)		
-    TIM_SelectSlaveMode				(TIM4, TIM_SlaveMode_Gated);
+		TIM_SelectInputTrigger	 	(TIM3, TIM_TS_ITR0);			//CH2 - TIM_TS_ITR0 for master(TIM1)		
+    		TIM_SelectSlaveMode		(TIM3, TIM_SlaveMode_Gated);
+		TIM_SelectInputTrigger	 	(TIM2, TIM_TS_ITR0);			//CH3 - TIM_TS_ITR0 for master(TIM1)		
+    		TIM_SelectSlaveMode		(TIM2, TIM_SlaveMode_Gated);
+		TIM_SelectInputTrigger	 	(TIM4, TIM_TS_ITR0);			//CH4 - TIM_TS_ITR0 for master(TIM1)		
+    		TIM_SelectSlaveMode		(TIM4, TIM_SlaveMode_Gated);
 		
-		TM_PWM_SetChannel 				(&TIM5_Data, TM_PWM_Channel_1, DUTY1);
+		TM_PWM_SetChannel 		(&TIM5_Data, TM_PWM_Channel_1, DUTY1);
 			
 		TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 90% / 1679-i / TIM4_Data.Period/4
-		TIM_SetCounter(TIM3, PHASE2);	// PA7 CH2 DELAY 180%
+		TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 180%
 		TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 270%
-		TIM_SetCounter(TIM5, 0);			// PA0 CH3 DELAY  0%
+		TIM_SetCounter(TIM5, 0);      // PA0 CH3 DELAY  0%
 			
 		TIM_Cmd(TIM5, ENABLE); // CH5	
 		TIM_Cmd(TIM2, ENABLE); // CH3
@@ -316,22 +315,22 @@ int32_t DUTY1,  DUTY2,  DUTY3, DUTY4;
 int32_t PHASE1, PHASE2, PHASE3;	
 float 	DUTx, PHASEs;
 	
-		TM_PWM_InitTimer	(TIM1, &TIM1_Data, FREQ);
-		TM_PWM_InitTimer	(TIM5, &TIM5_Data, FREQ);
-		TM_PWM_InitTimer	(TIM2, &TIM2_Data, FREQ);
-		TM_PWM_InitTimer	(TIM3, &TIM3_Data, FREQ);
-		TM_PWM_InitTimer	(TIM4, &TIM4_Data, FREQ);
+		TM_PWM_InitTimer (TIM1, &TIM1_Data, FREQ);
+		TM_PWM_InitTimer (TIM5, &TIM5_Data, FREQ);
+		TM_PWM_InitTimer (TIM2, &TIM2_Data, FREQ);
+		TM_PWM_InitTimer (TIM3, &TIM3_Data, FREQ);
+		TM_PWM_InitTimer (TIM4, &TIM4_Data, FREQ);
 	
 		PHASEs 	= (float)(TIM1_Data.Period/3600);
 		PHASE1	= PHASEs*PHAS1; // 
-		PHASE2	=	PHASEs*PHAS2; //
-		PHASE3	=	PHASEs*PHAS3;
+		PHASE2	= PHASEs*PHAS2; //
+		PHASE3	= PHASEs*PHAS3;
 	
-		DUTx		= (TIM1_Data.Period/1000);
-		DUTY1		= DUTx * DUT1*10;
-		DUTY2		= DUTx * DUT2;
-		DUTY3		= DUTx * DUT3;
-		DUTY4		= DUTx * DUT4;
+		DUTx	= (TIM1_Data.Period/1000);
+		DUTY1	= DUTx * DUT1*10;
+		DUTY2	= DUTx * DUT2;
+		DUTY3	= DUTx * DUT3;
+		DUTY4	= DUTx * DUT4;
 	
 		TM_PWM_SetChannel (&TIM5_Data, TM_PWM_Channel_1, DUTY1);
 		TM_PWM_SetChannel (&TIM2_Data, TM_PWM_Channel_3, DUTY2);
@@ -343,9 +342,9 @@ float 	DUTx, PHASEs;
 		// there are three timers on board with such a register. 
 		//This allows the three PWM outputs to be re-arranged for phase offset relative to the input flip-flop.
 		TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 25% / 1679-i / TIM4_Data.Period/4
-		TIM_SetCounter(TIM3, PHASE2);	// PA7 CH2 DELAY 50%
+		TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 50%
 		TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 75%
-		TIM_SetCounter(TIM5, 14);			// PA0 CH3 DELAY  0%
+		TIM_SetCounter(TIM5, 14);     // PA0 CH3 DELAY  0%
 		
 		
 		TIM_Cmd(TIM5, ENABLE); // CH5
@@ -436,21 +435,21 @@ void FreqSendDisplay (int x, int y, float freq) {
 char strbuf[30]; 
 	
 	sprintf(strbuf, "FREQ:  %.2f Hz", 
-		(float)freq);
+	(float)freq);
 		
-		TM_ILI9341_Puts(x, y, strbuf, 
-		&TM_Font_11x18, ILI9341_COLOR_WHITE, FonScreen);
+	TM_ILI9341_Puts(x, y, strbuf, 
+	&TM_Font_11x18, ILI9341_COLOR_WHITE, FonScreen);
 }
 
 void InitBUTT (void){
 	GPIO_InitTypeDef BUTT_Struct;             	// Structure Reference
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 	
-  BUTT_Struct.GPIO_Pin  	= GPIO_Pin_11 | GPIO_Pin_14 | GPIO_Pin_13 | GPIO_Pin_15 | GPIO_Pin_14;
-	BUTT_Struct.GPIO_Mode 	= GPIO_Mode_IN; 	  // we want it to be an input
+  	BUTT_Struct.GPIO_Pin  	= GPIO_Pin_11 | GPIO_Pin_14 | GPIO_Pin_13 | GPIO_Pin_15 | GPIO_Pin_14;
+	BUTT_Struct.GPIO_Mode 	= GPIO_Mode_IN; 	// we want it to be an input
 	BUTT_Struct.GPIO_Speed 	= GPIO_Speed_2MHz;	//this sets the GPIO modules clock speed
 	BUTT_Struct.GPIO_OType 	= GPIO_OType_PP;   	// this sets the pin type to push / pull (as opposed to open drain)
-	BUTT_Struct.GPIO_PuPd 	= GPIO_PuPd_UP; 		// this enables the pulldown resistor --> we want to detect a high level
+	BUTT_Struct.GPIO_PuPd 	= GPIO_PuPd_UP; 	// this enables the pulldown resistor --> we want to detect a high level
 	GPIO_Init(GPIOE, &BUTT_Struct);
 }
 
@@ -502,26 +501,26 @@ int main(void) {
 			Delayms(250);
 			if (MENU==MFREQ)
 			switch (STEP) {
-				case 1: 		STEP=10; 		break;
-				case 10: 		STEP=100;		break;
+				case 1: 	STEP=10; 		break;
+				case 10: 	STEP=100;		break;
 				case 100: 	STEP=1;			break;
-				default:		STEP=1;			break;
+				default:	STEP=1;			break;
 			}
 			
 			if ((MENU==MDUTY1) || (MENU==MDUTY2) || (MENU==MDUTY3) || (MENU==MDUTY4))
 			switch (STEPd) {
-				case 1: 		STEPd=10; 		break;
-				case 10: 		STEPd=100;		break;
+				case 1: 	STEPd=10; 		break;
+				case 10: 	STEPd=100;		break;
 				case 100: 	STEPd=1000;		break;
-				default:		STEPd=1;			break;
+				default:	STEPd=1;		break;
 			}
 			
 			if ((MENU==MPHAS1) || (MENU==MPHAS2) || (MENU==MPHAS3))
 			switch (STEPf) {
-				case 1: 		STEPf=10; 		break;
-				case 10: 		STEPf=100;		break;
-				case 100: 	STEPf=1;			break;
-				default:		STEPf=1;			break;
+				case 1: 	STEPf=10; 		break;
+				case 10: 	STEPf=100;		break;
+				case 100: 	STEPf=1;		break;
+				default:	STEPf=1;		break;
 			}
 			
 			
@@ -529,63 +528,63 @@ int main(void) {
 		}
 		
 		if (ReadBUTT1==0){
-				Delayms(250);
-				switch (MENU)	{
-					case MFREQ: {
-						if(FREQ>STEP) FREQ=FREQ-STEP;
-						StartPage();
-						SetCH_ALL();
+			Delayms(250);
+			switch (MENU)	{
+				case MFREQ: {
+					if(FREQ>STEP) FREQ=FREQ-STEP;
+					StartPage();
+					SetCH_ALL();
+				}break;
+					
+				case MDUTY1: {
+					if(DUT1-STEPd > 0) DUT1=DUT1-STEPd;
+					else DUT1 = 1;
+					StartPage();
+					SetCH_ALL();
+				}break;
+					
+				case MDUTY2: {
+					if(DUT2-STEPd > 0) DUT2=DUT2-STEPd;
+					else DUT2 = 1;
+					StartPage();
+					SetCH_ALL();
+				}break;
+					
+				case MDUTY3: {
+					if(DUT3-STEPd > 0) DUT3=DUT3-STEPd;
+					else DUT3 = 1;
+					StartPage();
+					SetCH_ALL();
 					}break;
 					
-					case MDUTY1: {
-						if(DUT1-STEPd > 0) DUT1=DUT1-STEPd;
-						else DUT1 = 1;
-						StartPage();
-						SetCH_ALL();
-					}break;
+				case MDUTY4: {
+					if(DUT4-STEPd > 0) DUT4=DUT4-STEPd;
+					else DUT1 = 1;
+					StartPage();
+					SetCH_ALL();
+				}break;
 					
-					case MDUTY2: {
-						if(DUT2-STEPd > 0) DUT2=DUT2-STEPd;
-						else DUT2 = 1;
-						StartPage();
-						SetCH_ALL();
-					}break;
+				case MPHAS1: {
+					if ((PHAS1-STEPf)>0) PHAS1=PHAS1-STEPf;
+					else PHAS1=1;
+					StartPage();
+					SetCH_ALL();
+				} break;
 					
-					case MDUTY3: {
-						if(DUT3-STEPd > 0) DUT3=DUT3-STEPd;
-						else DUT3 = 1;
-						StartPage();
-						SetCH_ALL();
-					}break;
+				case MPHAS2: {
+					if ((PHAS2-STEPf)>0) PHAS2=PHAS2-STEPf;
+					else PHAS2=1;
+					StartPage();
+					SetCH_ALL();
+				} break;
 					
-					case MDUTY4: {
-						if(DUT4-STEPd > 0) DUT4=DUT4-STEPd;
-						else DUT1 = 1;
-						StartPage();
-						SetCH_ALL();
-					}break;
-					
-					case MPHAS1: {
-						if ((PHAS1-STEPf)>0) PHAS1=PHAS1-STEPf;
-						else PHAS1=1;
-						StartPage();
-						SetCH_ALL();
-					} break;
-					
-					case MPHAS2: {
-						if ((PHAS2-STEPf)>0) PHAS2=PHAS2-STEPf;
-						else PHAS2=1;
-						StartPage();
-						SetCH_ALL();
-					} break;
-					
-					case MPHAS3: {
-						if ((PHAS3-STEPf)>0) PHAS3=PHAS3-STEPf;
-						else PHAS3=1;
-						StartPage();
-						SetCH_ALL();
-					} break;
-				}
+				case MPHAS3: {
+					if ((PHAS3-STEPf)>0) PHAS3=PHAS3-STEPf;
+					else PHAS3=1;
+					StartPage();
+					SetCH_ALL();
+				} break;
+			}
 		}
 		
 		if (ReadBUTT3==0){
