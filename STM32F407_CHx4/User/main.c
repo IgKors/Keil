@@ -126,7 +126,7 @@ int32_t aFlagFL	= ADDRESS+22;
 1) 250kHz C x 4 (20nF) 0, 45, 90 , 135 grd
 2) 360kHz C x 4 (10nF) 0, 90, 180, 270 grd
 */
- float 	FREQ	= 362000; //362 kHz for capacitors x 4 (20nF)
+float 	FREQ	= 362000; //362 kHz for capacitors x 4 (20nF)
 int16_t PHAS1	= 900,	  // Channel-2 90 degree phase shift
 	PHAS2	= 1800,   // Channel-3 180 degree phase shift
 	PHAS3	= 2700,	  // Channel-4 270 degree phase shift
@@ -166,24 +166,24 @@ void WriteFlash(void);
 
 void WriteFlash(void)
 {	
-	// Write 16 Bits Data in Flash
-	FLASH_Unlock();
-	if (FLASH_EraseSector(FLASH_Sector_3, OB_BOR_LEVEL3))
-	{
-		FLASH_ProgramHalfWord (aFREQ, 	FREQ);
-		FLASH_ProgramHalfWord (aDUT1, 	DUT1);
-		FLASH_ProgramHalfWord (aDUT2, 	DUT2);
-		FLASH_ProgramHalfWord (aDUT3, 	DUT3);
-		FLASH_ProgramHalfWord (aDUT4, 	DUT4);
-		FLASH_ProgramHalfWord (aPHAS1, 	PHAS1);
-		FLASH_ProgramHalfWord (aPHAS2, 	PHAS2);
-		FLASH_ProgramHalfWord (aPHAS3, 	PHAS3);
-		FLASH_ProgramHalfWord (aSTEP, 	STEP);
-		FLASH_ProgramHalfWord (aSTEPd, 	STEPd);
-		FLASH_ProgramHalfWord (aSTEPf, 	STEPf);
-		FLASH_ProgramHalfWord (aFlagFL, 0);
-	}
-	FLASH_Lock();
+// Write 16 Bits Data in Flash
+FLASH_Unlock();
+if (FLASH_EraseSector(FLASH_Sector_3, OB_BOR_LEVEL3))
+{
+	FLASH_ProgramHalfWord (aFREQ, 	FREQ);
+	FLASH_ProgramHalfWord (aDUT1, 	DUT1);
+	FLASH_ProgramHalfWord (aDUT2, 	DUT2);
+	FLASH_ProgramHalfWord (aDUT3, 	DUT3);
+	FLASH_ProgramHalfWord (aDUT4, 	DUT4);
+	FLASH_ProgramHalfWord (aPHAS1, 	PHAS1);
+	FLASH_ProgramHalfWord (aPHAS2, 	PHAS2);
+	FLASH_ProgramHalfWord (aPHAS3, 	PHAS3);
+	FLASH_ProgramHalfWord (aSTEP, 	STEP);
+	FLASH_ProgramHalfWord (aSTEPd, 	STEPd);
+	FLASH_ProgramHalfWord (aSTEPf, 	STEPf);
+	FLASH_ProgramHalfWord (aFlagFL, 0);
+}
+FLASH_Lock();
 }
 
 // Read data from memory 16 Bit data 
@@ -196,17 +196,17 @@ uint16_t read_16bit (uint32_t FLASH_ADDR)
 
 void ReadFlash(void)
 {	
-		FREQ  = read_16bit (aFREQ);
-		DUT1  = read_16bit (aDUT1);
-		DUT2  = read_16bit (aDUT2);
-		DUT3  = read_16bit (aDUT3);
-		DUT4  = read_16bit (aDUT4);
-		PHAS1 = read_16bit (aPHAS1);
-		PHAS2 = read_16bit (aPHAS2);
-		PHAS3 = read_16bit (aPHAS3);
-		STEP  = read_16bit (aSTEP);
-		STEPd = read_16bit (aSTEPd);
-		STEPf = read_16bit (aSTEPf);
+	FREQ  = read_16bit (aFREQ);
+	DUT1  = read_16bit (aDUT1);
+	DUT2  = read_16bit (aDUT2);
+	DUT3  = read_16bit (aDUT3);
+	DUT4  = read_16bit (aDUT4);
+	PHAS1 = read_16bit (aPHAS1);
+	PHAS2 = read_16bit (aPHAS2);
+	PHAS3 = read_16bit (aPHAS3);
+	STEP  = read_16bit (aSTEP);
+	STEPd = read_16bit (aSTEPd);
+	STEPf = read_16bit (aSTEPf);
 }
 
 
@@ -220,93 +220,93 @@ void TIMERS_Init(void) {
 int32_t DUTY1,  DUTY2,  DUTY3, DUTY4;
 int32_t PHASE1, PHASE2, PHASE3;	
 float 	DUTx, PHASEs;	
-		// TIM1(MASTER CH1 PP1 PA8)
-		TM_PWM_InitTimer	(TIM1, &TIM1_Data, FREQ);
+	// TIM1(MASTER CH1 PP1 PA8)
+	TM_PWM_InitTimer	(TIM1, &TIM1_Data, FREQ);
 
-		// TIM5(SLAVE0 CH0 PP1 PA0)
-		TM_PWM_InitTimer	(TIM5, &TIM5_Data, FREQ);
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_0,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
+	// TIM5(SLAVE0 CH0 PP1 PA0)
+	TM_PWM_InitTimer	(TIM5, &TIM5_Data, FREQ);
+	TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_0,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
 	
-		if (DUTx ==0){	
-			DUTx		= (TIM1_Data.Period/1000);
-			DUTY1		= DUTx * DUT1;
-			DUTY2		= DUTx * DUT2;
-			DUTY3		= DUTx * DUT3;
-			DUTY4		= DUTx * DUT4;
-		}
-		TM_PWM_SetChannel (&TIM5_Data, TM_PWM_Channel_1, DUTY1-1);	
+	if (DUTx ==0){	
+		DUTx		= (TIM1_Data.Period/1000);
+		DUTY1		= DUTx * DUT1;
+		DUTY2		= DUTx * DUT2;
+		DUTY3		= DUTx * DUT3;
+		DUTY4		= DUTx * DUT4;
+	}
+	TM_PWM_SetChannel (&TIM5_Data, TM_PWM_Channel_1, DUTY1-1);	
 	
-		// TIM2(SLAVE1 CH3 PP1 PA2)
-		TM_PWM_InitTimer	(TIM2, &TIM2_Data, FREQ);
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-		TM_PWM_SetChannel (&TIM2_Data, TM_PWM_Channel_3, DUTY2-1);
+	// TIM2(SLAVE1 CH3 PP1 PA2)
+	TM_PWM_InitTimer	(TIM2, &TIM2_Data, FREQ);
+	TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
+	TM_PWM_SetChannel (&TIM2_Data, TM_PWM_Channel_3, DUTY2-1);
 		
 		
-		// TIM3(SLAVE2 CH2 PP1 PA7)
-		TM_PWM_InitTimer	(TIM3, &TIM3_Data, FREQ);
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_7,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
+	// TIM3(SLAVE2 CH2 PP1 PA7)
+	TM_PWM_InitTimer	(TIM3, &TIM3_Data, FREQ);
+	TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_7,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
 		
-		if (PHASEs != (TIM3_Data.Period/360)){
-			PHASEs 	= (float)(TIM5_Data.Period/360);
-			PHASE1	=	PHASEs*PHAS1;		// 90 
-			PHASE2	=	PHASEs*PHAS2; 	// 180 
-			PHASE3	=	PHASEs*PHAS3; 	// 270
+	if (PHASEs != (TIM3_Data.Period/360)){
+		PHASEs 	= (float)(TIM5_Data.Period/360);
+		PHASE1	=	PHASEs*PHAS1;	// 90 
+		PHASE2	=	PHASEs*PHAS2; 	// 180 
+		PHASE3	=	PHASEs*PHAS3; 	// 270
 			
-		}
+	}
 		
-		TM_PWM_SetChannel (&TIM3_Data, TM_PWM_Channel_2, DUTY3-1);
+	TM_PWM_SetChannel (&TIM3_Data, TM_PWM_Channel_2, DUTY3-1);
 		
 		
-		// TIM4(SLAVE3 CH4 PP1 PB9)
-		TM_PWM_InitTimer	(TIM4, &TIM4_Data, FREQ);
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_9,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
+	// TIM4(SLAVE3 CH4 PP1 PB9)
+	TM_PWM_InitTimer	(TIM4, &TIM4_Data, FREQ);
+	TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_9,  TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
 		
-		TIM_OCStructInit(&TIM_OC);
-		TIM_OC.TIM_OCMode 		= TIM_OCMode_PWM1; 		// TIM_OCMode_PWM1 / TIM_OCMode_Toggle
-    		TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
-    		TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High; 		// TIM_OCPolarity_Low / TIM_OCPolarity_High
-		TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
-    		TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High;
+	TIM_OCStructInit(&TIM_OC);
+	TIM_OC.TIM_OCMode 		= TIM_OCMode_PWM1; 		// TIM_OCMode_PWM1 / TIM_OCMode_Toggle
+    	TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
+    	TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High; 		// TIM_OCPolarity_Low / TIM_OCPolarity_High
+	TIM_OC.TIM_OutputState 		= TIM_OutputState_Enable;
+    	TIM_OC.TIM_OCPolarity 		= TIM_OCPolarity_High;
 		
-		TIM_OC.TIM_Pulse 		= TIM1_Data.Period/2;
-		TIM_OC1Init(TIM1, &TIM_OC);
+	TIM_OC.TIM_Pulse 		= TIM1_Data.Period/2;
+	TIM_OC1Init(TIM1, &TIM_OC);
     
 		
-		TIM_OC.TIM_Pulse 		= DUTY2;
-		TIM_OC2Init(TIM2, &TIM_OC);
+	TIM_OC.TIM_Pulse 		= DUTY2;
+	TIM_OC2Init(TIM2, &TIM_OC);
 		
-		TIM_OC.TIM_Pulse 		= DUTY3;
-		TIM_OC3Init(TIM3, &TIM_OC);
+	TIM_OC.TIM_Pulse 		= DUTY3;
+	TIM_OC3Init(TIM3, &TIM_OC);
 		
-		TIM_OC.TIM_Pulse 		= DUTY4;
-    		TIM_OC4Init(TIM4, &TIM_OC);
+	TIM_OC.TIM_Pulse 		= DUTY4;
+    	TIM_OC4Init(TIM4, &TIM_OC);
 		
-		// Registr OUT TIM_TRGOSource 
-		//Configuring the master 
-		TIM_SelectOutputTrigger  	(TIM1, TIM_TRGOSource_Enable);	
-		TIM_SelectMasterSlaveMode	(TIM1, TIM_MasterSlaveMode_Enable);
+	// Registr OUT TIM_TRGOSource 
+	//Configuring the master 
+	TIM_SelectOutputTrigger  	(TIM1, TIM_TRGOSource_Enable);	
+	TIM_SelectMasterSlaveMode	(TIM1, TIM_MasterSlaveMode_Enable);
 		
-		//Configuring the Slsve
-		TIM_SelectInputTrigger	 	(TIM3, TIM_TS_ITR0);			//CH2 - TIM_TS_ITR0 for master(TIM1)		
-    		TIM_SelectSlaveMode		(TIM3, TIM_SlaveMode_Gated);
-		TIM_SelectInputTrigger	 	(TIM2, TIM_TS_ITR0);			//CH3 - TIM_TS_ITR0 for master(TIM1)		
-    		TIM_SelectSlaveMode		(TIM2, TIM_SlaveMode_Gated);
-		TIM_SelectInputTrigger	 	(TIM4, TIM_TS_ITR0);			//CH4 - TIM_TS_ITR0 for master(TIM1)		
-    		TIM_SelectSlaveMode		(TIM4, TIM_SlaveMode_Gated);
+	//Configuring the Slsve
+	TIM_SelectInputTrigger	 	(TIM3, TIM_TS_ITR0);			//CH2 - TIM_TS_ITR0 for master(TIM1)		
+    	TIM_SelectSlaveMode		(TIM3, TIM_SlaveMode_Gated);
+	TIM_SelectInputTrigger	 	(TIM2, TIM_TS_ITR0);			//CH3 - TIM_TS_ITR0 for master(TIM1)		
+    	TIM_SelectSlaveMode		(TIM2, TIM_SlaveMode_Gated);
+	TIM_SelectInputTrigger	 	(TIM4, TIM_TS_ITR0);			//CH4 - TIM_TS_ITR0 for master(TIM1)		
+    	TIM_SelectSlaveMode		(TIM4, TIM_SlaveMode_Gated);
 		
-		TM_PWM_SetChannel 		(&TIM5_Data, TM_PWM_Channel_1, DUTY1);
+	TM_PWM_SetChannel 		(&TIM5_Data, TM_PWM_Channel_1, DUTY1);
 			
-		TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 90% / 1679-i / TIM4_Data.Period/4
-		TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 180%
-		TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 270%
-		TIM_SetCounter(TIM5, 0);      // PA0 CH3 DELAY  0%
+	TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 90% / 1679-i / TIM4_Data.Period/4
+	TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 180%
+	TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 270%
+	TIM_SetCounter(TIM5, 0);      // PA0 CH3 DELAY  0%
 			
-		TIM_Cmd(TIM5, ENABLE); // CH5	
-		TIM_Cmd(TIM2, ENABLE); // CH3
-		TIM_Cmd(TIM3, ENABLE); // CH2
-		TIM_Cmd(TIM4, ENABLE); // CH4
+	TIM_Cmd(TIM5, ENABLE); // CH5	
+	TIM_Cmd(TIM2, ENABLE); // CH3
+	TIM_Cmd(TIM3, ENABLE); // CH2
+	TIM_Cmd(TIM4, ENABLE); // CH4
 			
-		TIM_Cmd(TIM1, ENABLE); // CH1
+	TIM_Cmd(TIM1, ENABLE); // CH1
 		
 }
 
@@ -315,45 +315,43 @@ int32_t DUTY1,  DUTY2,  DUTY3, DUTY4;
 int32_t PHASE1, PHASE2, PHASE3;	
 float 	DUTx, PHASEs;
 	
-		TM_PWM_InitTimer (TIM1, &TIM1_Data, FREQ);
-		TM_PWM_InitTimer (TIM5, &TIM5_Data, FREQ);
-		TM_PWM_InitTimer (TIM2, &TIM2_Data, FREQ);
-		TM_PWM_InitTimer (TIM3, &TIM3_Data, FREQ);
-		TM_PWM_InitTimer (TIM4, &TIM4_Data, FREQ);
+	TM_PWM_InitTimer (TIM1, &TIM1_Data, FREQ);
+	TM_PWM_InitTimer (TIM5, &TIM5_Data, FREQ);
+	TM_PWM_InitTimer (TIM2, &TIM2_Data, FREQ);
+	TM_PWM_InitTimer (TIM3, &TIM3_Data, FREQ);
+	TM_PWM_InitTimer (TIM4, &TIM4_Data, FREQ);
 	
-		PHASEs 	= (float)(TIM1_Data.Period/3600);
-		PHASE1	= PHASEs*PHAS1; // 
-		PHASE2	= PHASEs*PHAS2; //
-		PHASE3	= PHASEs*PHAS3;
+	PHASEs 	= (float)(TIM1_Data.Period/3600);
+	PHASE1	= PHASEs*PHAS1; // 
+	PHASE2	= PHASEs*PHAS2; //
+	PHASE3	= PHASEs*PHAS3;
 	
-		DUTx	= (TIM1_Data.Period/1000);
-		DUTY1	= DUTx * DUT1*10;
-		DUTY2	= DUTx * DUT2;
-		DUTY3	= DUTx * DUT3;
-		DUTY4	= DUTx * DUT4;
+	DUTx	= (TIM1_Data.Period/1000);
+	DUTY1	= DUTx * DUT1*10;
+	DUTY2	= DUTx * DUT2;
+	DUTY3	= DUTx * DUT3;
+	DUTY4	= DUTx * DUT4;
 	
-		TM_PWM_SetChannel (&TIM5_Data, TM_PWM_Channel_1, DUTY1);
-		TM_PWM_SetChannel (&TIM2_Data, TM_PWM_Channel_3, DUTY2);
-		TM_PWM_SetChannel (&TIM3_Data, TM_PWM_Channel_2, DUTY3);
-		TM_PWM_SetChannel (&TIM4_Data, TM_PWM_Channel_4, DUTY4);
+	TM_PWM_SetChannel (&TIM5_Data, TM_PWM_Channel_1, DUTY1);
+	TM_PWM_SetChannel (&TIM2_Data, TM_PWM_Channel_3, DUTY2);
+	TM_PWM_SetChannel (&TIM3_Data, TM_PWM_Channel_2, DUTY3);
+	TM_PWM_SetChannel (&TIM4_Data, TM_PWM_Channel_4, DUTY4);
 		
-		// TIM_SetCounter - TIM_SetCounter - Write the number of ticks to the delay register for the specified timer. 
-		// In the line of stm32f4xx controllers, 
-		// there are three timers on board with such a register. 
-		//This allows the three PWM outputs to be re-arranged for phase offset relative to the input flip-flop.
-		TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 25% / 1679-i / TIM4_Data.Period/4
-		TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 50%
-		TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 75%
-		TIM_SetCounter(TIM5, 14);     // PA0 CH3 DELAY  0%
-		
-		
-		TIM_Cmd(TIM5, ENABLE); // CH5
-		TIM_Cmd(TIM2, ENABLE); // CH3
-		TIM_Cmd(TIM3, ENABLE); // CH2
-		TIM_Cmd(TIM4, ENABLE); // CH4
-		
+	// TIM_SetCounter - TIM_SetCounter - Write the number of ticks to the delay register for the specified timer. 
+	// In the line of stm32f4xx controllers, 
+	// there are three timers on board with such a register. 
+	//This allows the three PWM outputs to be re-arranged for phase offset relative to the input flip-flop.
+	TIM_SetCounter(TIM2, PHASE1); // PA2 CH4 DELAY 25% / 1679-i / TIM4_Data.Period/4
+	TIM_SetCounter(TIM3, PHASE2); // PA7 CH2 DELAY 50%
+	TIM_SetCounter(TIM4, PHASE3); // PB9 CH3 DELAY 75%
+	TIM_SetCounter(TIM5, 14);     // PA0 CH3 DELAY  0%
 			
-		TIM_Cmd(TIM1, ENABLE); // CH1
+	TIM_Cmd(TIM5, ENABLE); // CH5
+	TIM_Cmd(TIM2, ENABLE); // CH3
+	TIM_Cmd(TIM3, ENABLE); // CH2
+	TIM_Cmd(TIM4, ENABLE); // CH4
+				
+	TIM_Cmd(TIM1, ENABLE); // CH1
 }
 
 void StartPage (void){
@@ -378,49 +376,49 @@ void StartPage (void){
 	//FreqSendDisplay (40, 50, FREQ);
 	
 	sprintf(strbuf, "FREQ:  %.3f KHz", 
-		(float)FREQ/1000);
-		if (MENU!=1) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;
-		TM_ILI9341_Puts(40, 30, strbuf, 
-		&TM_Font_11x18, color, FonScreen);
+	(float)FREQ/1000);
+	if (MENU!=1) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;
+	TM_ILI9341_Puts(40, 30, strbuf, 
+	&TM_Font_11x18, color, FonScreen);
 		
 	sprintf(strbuf, "Duty CH1:  %.1f %%", 
-		(float)DUT1/10);
+	(float)DUT1/10);
 	if (MENU!=2) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;	
 	TM_ILI9341_Puts(40, 55, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Duty CH2:  %.1f %%", 
-		(float)DUT2/10);
+	(float)DUT2/10);
 	if (MENU!=3) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;	
 	TM_ILI9341_Puts(40, 75, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Duty CH3:  %.1f %%", 
-		(float)DUT3/10);
+	(float)DUT3/10);
 	if (MENU!=4) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;	
 	TM_ILI9341_Puts(40, 95, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Duty CH4:  %.1f %%", 
-		(float)DUT4/10);
+	(float)DUT4/10);
 	if (MENU!=5) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;	
 	TM_ILI9341_Puts(40, 115, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Phase 2:  %.1f", 
-		(float)PHAS1/10);
+	(float)PHAS1/10);
 	if (MENU!=6) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;
 	TM_ILI9341_Puts(40, 140, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Phase 3:  %.1f", 
-		(float)PHAS2/10);
+	(float)PHAS2/10);
 	if (MENU!=7) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;
 	TM_ILI9341_Puts(40, 160, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
 	
 	sprintf(strbuf, "Phase 4:  %.1f", 
-		(float)PHAS3/10);
+	(float)PHAS3/10);
 	if (MENU!=8) color=ILI9341_COLOR_WHITE; else color=ILI9341_COLOR_YELLOW;
 	TM_ILI9341_Puts(40, 180, strbuf, 
 	&TM_Font_11x18, color, FonScreen);
